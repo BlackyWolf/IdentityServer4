@@ -161,7 +161,7 @@ namespace IdentityServer4.Extensions
                 }
 
                 // url doesn't start with "//" or "/\"
-                if (url[1] != '/' && url[1] != '\\')
+                if (url[1] != '/' && url[1] != '\\' && !FindControlChar(url.AsSpan(1)))
                 {
                     return true;
                 }
@@ -179,7 +179,7 @@ namespace IdentityServer4.Extensions
                 }
 
                 // url doesn't start with "~//" or "~/\"
-                if (url[2] != '/' && url[2] != '\\')
+                if (url[2] != '/' && url[2] != '\\' && !FindControlChar(url.AsSpan(2)))
                 {
                     return true;
                 }
@@ -189,6 +189,9 @@ namespace IdentityServer4.Extensions
 
             return false;
         }
+
+        private static bool FindControlChar(ReadOnlySpan<char> characters)
+            => characters.Any(x => char.IsControl(character));
 
         [DebuggerStepThrough]
         public static string AddQueryString(this string url, string query)
